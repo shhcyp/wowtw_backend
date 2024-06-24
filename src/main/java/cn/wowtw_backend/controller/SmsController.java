@@ -2,7 +2,7 @@ package cn.wowtw_backend.controller;
 
 import cn.wowtw_backend.utils.Result;
 import cn.wowtw_backend.model.SmsVerification;
-import cn.wowtw_backend.service.impl.SmsService;
+import cn.wowtw_backend.service.impl.SmsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,9 @@ import java.util.Map;
 @RequestMapping("/api")
 public class SmsController {
 
-    private final SmsService smsService;
+    private final SmsServiceImpl smsService;
 
-    public SmsController(SmsService smsService) {
+    public SmsController(SmsServiceImpl smsService) {
         this.smsService = smsService;
     }
 

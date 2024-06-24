@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class SmsService {
+public class SmsServiceImpl {
 
     private final SmsVerificationRepository smsVerificationRepository;
     private final Client smsClient;
 
     @Autowired
-    public SmsService(Client smsClient, SmsVerificationRepository smsVerificationRepository) {
+    public SmsServiceImpl(Client smsClient, SmsVerificationRepository smsVerificationRepository) {
         this.smsClient = smsClient;
         this.smsVerificationRepository = smsVerificationRepository;
     }

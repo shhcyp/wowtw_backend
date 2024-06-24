@@ -1,6 +1,7 @@
 package cn.wowtw_backend.exception;
 
 import cn.wowtw_backend.utils.Result;
+import com.alipay.api.AlipayApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,5 +21,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(Exception e) {
         return "error/404"; // 返回一个自定义的404页面，或者返回一个简单的字符串
+    }
+
+    @ExceptionHandler(AlipayApiException.class)
+    public Result handleAlipayApiException(AlipayApiException e) {
+        e.printStackTrace();
+        return Result.fail("支付宝 API 调用失败", e.getErrMsg());
     }
 }
