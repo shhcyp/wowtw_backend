@@ -1,7 +1,9 @@
 package cn.wowtw_backend.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,7 +11,9 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "tb_orders")
-public class Order {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AlipayOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +21,9 @@ public class Order {
 
     @Column(name = "out_trade_no", nullable = false, unique = true, length = 64)
     private String outTradeNo;
+
+    @Column(name = "alipay_qr_code", length = 255)
+    private String alipayQRCode;
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;

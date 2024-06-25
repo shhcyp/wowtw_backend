@@ -1,37 +1,49 @@
 package cn.wowtw_backend.service.impl;
 
-import cn.wowtw_backend.model.Order;
+import cn.wowtw_backend.model.AlipayOrder;
+import cn.wowtw_backend.repository.AlipayOrderDAO;
 import cn.wowtw_backend.service.AlipayService;
 import cn.wowtw_backend.utils.OrderUtil;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayConfig;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeCancelModel;
 import com.alipay.api.domain.AlipayTradePrecreateModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.request.AlipayTradeCancelRequest;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.response.AlipayTradeCancelResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@AllArgsConstructor
 public class AlipayServiceImpl implements AlipayService {
 
     private final AlipayConfig alipayConfig;
-    public AlipayServiceImpl(AlipayConfig alipayConfig) {
-        this.alipayConfig = alipayConfig;
-    }
+    private final AlipayOrderDAO alipayOrderDAO;
+
+    // 存储tradeStatus查询结果，方便共享
+    private final ConcurrentHashMap<String, String> pollResults = new ConcurrentHashMap<>();
+
 
     @Override
-    public String preCreate(Order createOrder) throws AlipayApiException {
+    public AlipayOrder preCreateOrder(AlipayOrder preCreateRequest) throws AlipayApiException {
         String outTradeNo = OrderUtil.generateOrderNo();
-        String inviteIdentifier = createOrder.getInviteIdentifier();
-        String totalAmount = inviteIdentifier == null || inviteIdentifier.isEmpty() ? "345.00" : "315.00";
+        String phoneNumber = preCreateRequest.getPhoneNumber();
+        String inviteIdentifier = preCreateRequest.getInviteIdentifier();
+        String totalAmount = inviteIdentifier == null || inviteIdentifier.isEmpty() ? "0.03" : "0.01";
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
 
@@ -47,25 +59,33 @@ public class AlipayServiceImpl implements AlipayService {
         System.out.println(response.getBody());
 
         String alipayQRCode = response.getQrCode();
-        /*
-        String httpBody = response.getBody();
-        JsonObject jsonObject = JsonParser.parseString(httpBody).getAsJsonObject();
-        String alipayQRCode = jsonObject.getAsJsonObject("alipay_trade_precreate_response").get("qr_code").getAsString();
-        */
         System.out.println(alipayQRCode);
 
+        // Save alipay order to database
+        AlipayOrder preCreateOrder = new AlipayOrder();
+        preCreateOrder.setOutTradeNo(outTradeNo);
+        preCreateOrder.setAlipayQRCode(alipayQRCode);
+        preCreateOrder.setPhoneNumber(phoneNumber);
+        preCreateOrder.setInviteIdentifier(inviteIdentifier);
+        preCreateOrder.setTotalAmount(new BigDecimal(totalAmount));
+        preCreateOrder.setStatus("CREATED");
+        preCreateOrder.setCreateTime(LocalDateTime.now());
+        preCreateOrder.setUpdateTime(LocalDateTime.now());
+        alipayOrderDAO.save(preCreateOrder);
+
+
         if (response.isSuccess()) {
-            System.out.println("调用成功");
-            return alipayQRCode;
+            System.out.println("调用预创订单接口成功");
+            return preCreateOrder;
         } else {
-            System.out.println("调用失败");
+            System.out.println("调用预创订单接口失败");
             /*
             sdk版本是"4.38.0.ALL"及以上,可以参考下面的示例获取诊断链接
             String diagnosisUrl = DiagnosisUtils.getDiagnosisUrl(response);
             System.out.println(diagnosisUrl);
             */
+            return null;
         }
-        return alipayQRCode;
     }
 
     @Override
@@ -84,18 +104,70 @@ public class AlipayServiceImpl implements AlipayService {
         AlipayTradeQueryResponse response = alipayClient.execute(request);
         System.out.println(response.getBody());
 
-
-        // String httpBody = response.getBody();
-        // JsonObject jsonObject = JsonParser.parseString(httpBody).getAsJsonObject();
-        // String tradeStatus = jsonObject.getAsJsonObject("alipay_trade_query_response").get("trade_status").getAsString();
-
         if (response.isSuccess()) {
             System.out.println("查询成功，订单状态为:" + response.getTradeStatus());
             return response.getTradeStatus();
         } else {
             System.out.println("查询失败");
-            return null;
+            return response.getSubCode();
         }
     }
 
+    // 支付状态轮询
+    @Override
+    public void pollPayment(String outTradeNo) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            int attempts = 0;
+            final int maxAttempts = 17;
+
+            @Override
+            public void run() {
+                attempts ++;
+                try {
+                    String tradeStatus = queryAlipayResult(outTradeNo);
+                    if ("TRADE_SUCCESS".equals(tradeStatus)) {
+                        System.out.println("交易成功");
+                        pollResults.put(outTradeNo, tradeStatus);
+                        scheduler.shutdown();
+                    } else if ("TRADE_CLOSED".equals(tradeStatus)) {
+                        System.out.println("交易关闭");
+                        scheduler.shutdown();
+                    } else if ("WAIT_BUYER_PAY".equals(tradeStatus) || attempts >= maxAttempts) {
+                        cancelPayment(outTradeNo);
+                        System.out.println("超时未支付，交易已撤销");
+                        pollResults.put(outTradeNo, "TRADE_CLOSED");
+                        scheduler.shutdown();
+                    }
+                } catch (AlipayApiException e) {
+                    e.printStackTrace();
+                    scheduler.shutdown();
+                }
+            }
+        }, 2, 5, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void cancelPayment(String outTradeNo) throws AlipayApiException {
+        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
+
+        AlipayTradeCancelRequest request = new AlipayTradeCancelRequest();
+        AlipayTradeCancelModel model = new AlipayTradeCancelModel();
+        model.setOutTradeNo(outTradeNo);
+        request.setBizModel(model);
+
+        AlipayTradeCancelResponse response = alipayClient.execute(request);
+        System.out.println(response.getBody());
+
+        if (response.isSuccess()) {
+            System.out.println("调用取消订单接口成功，已取消订单");
+        } else {
+            System.out.println("调用取消订单接口失败");
+        }
+    }
+
+    public String getPollResult(String outTradeNo) {
+        return pollResults.get(outTradeNo);
+    }
 }
