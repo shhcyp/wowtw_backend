@@ -15,7 +15,7 @@ public class TalentController {
     private final TalentService talentService;
 
     // 根据talentId查询装备，还需要修改，装备分组、查询天赋树
-    @GetMapping("/{talentId}/gears")
+    @GetMapping("/{talentId}")
     public Result getGearsByTalent(@PathVariable Integer talentId) {
         List<GearDTO> gears = talentService.getGearsByTalent(talentId);
         return Result.success(gears);

@@ -39,6 +39,7 @@ public class TalentServiceImpl implements TalentService {
                 List<GearMarkDTO> gearMarkDTOS = new ArrayList<>();
                 for (GearMark gearMark : gearMarks) {
                     GearMarkDTO gearMarkDTO = new GearMarkDTO();
+                    gearMarkDTO.setName(gearMark.getName());
                     gearMarkDTO.setIcon(gearMark.getIcon());
 
                     gearMarkDTOS.add(gearMarkDTO);
