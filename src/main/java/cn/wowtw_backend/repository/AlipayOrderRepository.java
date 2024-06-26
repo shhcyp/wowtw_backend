@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlipayOrderDAO extends JpaRepository<AlipayOrder, Long> {
+public interface AlipayOrderRepository extends JpaRepository<AlipayOrder, Long> {
 }

@@ -1,7 +1,7 @@
 package cn.wowtw_backend.service.impl;
 
 import cn.wowtw_backend.model.AlipayOrder;
-import cn.wowtw_backend.repository.AlipayOrderDAO;
+import cn.wowtw_backend.repository.AlipayOrderRepository;
 import cn.wowtw_backend.service.AlipayService;
 import cn.wowtw_backend.utils.OrderUtil;
 import com.alipay.api.AlipayApiException;
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class AlipayServiceImpl implements AlipayService {
 
     private final AlipayConfig alipayConfig;
-    private final AlipayOrderDAO alipayOrderDAO;
+    private final AlipayOrderRepository alipayOrderRepository;
 
     // 存储tradeStatus查询结果，方便共享
     private final ConcurrentHashMap<String, String> pollResults = new ConcurrentHashMap<>();
@@ -71,7 +71,7 @@ public class AlipayServiceImpl implements AlipayService {
         preCreateOrder.setStatus("CREATED");
         preCreateOrder.setCreateTime(LocalDateTime.now());
         preCreateOrder.setUpdateTime(LocalDateTime.now());
-        alipayOrderDAO.save(preCreateOrder);
+        alipayOrderRepository.save(preCreateOrder);
 
 
         if (response.isSuccess()) {

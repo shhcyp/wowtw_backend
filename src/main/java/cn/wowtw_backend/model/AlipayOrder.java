@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "tb_orders")
+@Table(name = "alipay_orders")
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlipayOrder {
