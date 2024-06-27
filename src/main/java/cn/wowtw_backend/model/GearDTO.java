@@ -9,10 +9,10 @@ public class GearDTO {
     private String icon;
     private String part;
     private String name;
-    private Integer quality;
-    private Integer isMark;
-    private List<GearMarkDTO> mark;
+    private Byte quality;
+    private Byte isMark;
+    private List<GearMarkDTO> marks;
     private String drop;
-    private Integer isExtra;
+    private Byte isExtra;
     private List<GearExtraDTO> gearExtra;
 }
