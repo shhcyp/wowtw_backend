@@ -15,11 +15,9 @@ public class Talent {
     private Integer id;
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "wow_talent_gear",
-            joinColumns = @JoinColumn(name = "talent_id"),
-            inverseJoinColumns = @JoinColumn(name = "gear_id")
-    )
-    private List<Gear> gears;
+    @ManyToMany(mappedBy = "talents")
+    private List<InfoGroup> infoGroups;
+
+    @ManyToMany(mappedBy = "talents")
+    private List<Plate> plates;
 }
