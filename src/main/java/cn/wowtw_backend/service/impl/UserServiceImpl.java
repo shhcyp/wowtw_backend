@@ -3,7 +3,7 @@ package cn.wowtw_backend.service.impl;
 import cn.wowtw_backend.mapper.UserMapper;
 import cn.wowtw_backend.service.UserService;
 import cn.wowtw_backend.utils.IdentifierGenerator;
-import cn.wowtw_backend.model.User;
+import cn.wowtw_backend.model.user.User;
 import cn.wowtw_backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

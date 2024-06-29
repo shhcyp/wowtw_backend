@@ -1,6 +1,6 @@
 package cn.wowtw_backend.config;
 
-import cn.wowtw_backend.model.AlipayProperties;
+import cn.wowtw_backend.model.alipay.AlipayProperties;
 import com.alipay.api.AlipayConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package cn.wowtw_backend.model;
+package cn.wowtw_backend.model.infoGroup;
 
 import lombok.Data;
 

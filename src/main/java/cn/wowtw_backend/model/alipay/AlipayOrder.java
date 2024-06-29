@@ -1,4 +1,4 @@
-package cn.wowtw_backend.model;
+package cn.wowtw_backend.model.alipay;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

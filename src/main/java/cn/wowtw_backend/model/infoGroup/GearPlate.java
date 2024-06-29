@@ -1,14 +1,17 @@
-package cn.wowtw_backend.model;
+package cn.wowtw_backend.model.infoGroup;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+//@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "wow_plates")
-public class Plate {
+public class GearPlate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -16,14 +19,24 @@ public class Plate {
     private String part;
     private String name;
     private Byte quality;
-    private Byte isMark;
+    private Boolean isMark;
     private String drop;
-    private Byte isExtra;
+    private Boolean isExtra;
 
-    @ManyToMany(mappedBy = "plates")
+    @ManyToMany
+    @JoinTable(
+            name = "wow_talents_info_group_plates",
+            joinColumns = @JoinColumn(name = "plate_id"),
+            inverseJoinColumns = @JoinColumn(name = "talent_id")
+    )
     private List<Talent> talents;
 
-    @ManyToMany(mappedBy = "plates")
+    @ManyToMany
+    @JoinTable(
+            name = "wow_talents_info_group_plates",
+            joinColumns = @JoinColumn(name = "plate_id"),
+            inverseJoinColumns = @JoinColumn(name = "info_group_id")
+    )
     private List<InfoGroup> infoGroups;
 
     @ManyToMany

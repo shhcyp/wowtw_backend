@@ -1,9 +1,7 @@
-package cn.wowtw_backend.model;
+package cn.wowtw_backend.model.infoGroup;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data

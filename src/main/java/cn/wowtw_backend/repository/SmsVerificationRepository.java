@@ -1,6 +1,6 @@
 package cn.wowtw_backend.repository;
 
-import cn.wowtw_backend.model.SmsVerification;
+import cn.wowtw_backend.model.sms.SmsVerification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

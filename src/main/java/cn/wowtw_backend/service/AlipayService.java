@@ -1,6 +1,6 @@
 package cn.wowtw_backend.service;
 
-import cn.wowtw_backend.model.AlipayOrder;
+import cn.wowtw_backend.model.alipay.AlipayOrder;
 import com.alipay.api.AlipayApiException;
 
 public interface AlipayService {

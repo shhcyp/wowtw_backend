@@ -3,7 +3,7 @@ package cn.wowtw_backend.controller;
 import cn.wowtw_backend.utils.Result;
 import cn.wowtw_backend.service.UserService;
 import cn.wowtw_backend.utils.JwtUtils;
-import cn.wowtw_backend.model.User;
+import cn.wowtw_backend.model.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

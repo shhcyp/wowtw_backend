@@ -1,10 +1,9 @@
-package cn.wowtw_backend.model;
+package cn.wowtw_backend.model.infoGroup;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -15,9 +14,7 @@ public class Talent {
     private Integer id;
     private String name;
 
-    @ManyToMany(mappedBy = "talents")
-    private List<InfoGroup> infoGroups;
+    @OneToMany(mappedBy = "talent")
+    private List<TalentInfoGroup> talentInfoGroups;
 
-    @ManyToMany(mappedBy = "talents")
-    private List<Plate> plates;
 }

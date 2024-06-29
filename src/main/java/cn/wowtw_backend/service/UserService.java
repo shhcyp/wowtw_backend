@@ -1,6 +1,6 @@
 package cn.wowtw_backend.service;
 
-import cn.wowtw_backend.model.User;
+import cn.wowtw_backend.model.user.User;
 
 import java.util.List;
 

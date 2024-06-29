@@ -1,6 +1,6 @@
 package cn.wowtw_backend.repository;
 
-import cn.wowtw_backend.model.AlipayOrder;
+import cn.wowtw_backend.model.alipay.AlipayOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

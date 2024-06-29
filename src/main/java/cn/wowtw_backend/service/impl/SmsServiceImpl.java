@@ -1,6 +1,6 @@
 package cn.wowtw_backend.service.impl;
 
-import cn.wowtw_backend.model.SmsVerification;
+import cn.wowtw_backend.model.sms.SmsVerification;
 import cn.wowtw_backend.utils.SmsUtil;
 import com.aliyun.dysmsapi20170525.Client;
 import com.aliyun.dysmsapi20170525.models.SendSmsRequest;

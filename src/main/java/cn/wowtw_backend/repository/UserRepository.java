@@ -1,6 +1,6 @@
 package cn.wowtw_backend.repository;
 
-import cn.wowtw_backend.model.User;
+import cn.wowtw_backend.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package cn.wowtw_backend.controller;
 
 import cn.wowtw_backend.utils.Result;
-import cn.wowtw_backend.model.SmsVerification;
+import cn.wowtw_backend.model.sms.SmsVerification;
 import cn.wowtw_backend.service.impl.SmsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
