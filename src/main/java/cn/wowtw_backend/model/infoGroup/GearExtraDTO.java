@@ -6,6 +6,8 @@ import lombok.Data;
 public class GearExtraDTO {
 
     private String icon;
+
     private String description;
+
     private Byte quality;
 }

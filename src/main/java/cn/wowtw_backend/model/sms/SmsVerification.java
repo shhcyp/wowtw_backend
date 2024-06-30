@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 public class SmsVerification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

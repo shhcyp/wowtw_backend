@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // 修改头像，一周一次的，先废弃
-//    @Override
+    // @Override
     // @Transactional
     public void updateAvatar(Integer id, String newAvatarUrl) throws Exception {
         Optional<User> userOptional = userRepository.findById(id);

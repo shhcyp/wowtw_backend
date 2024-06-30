@@ -1,6 +1,5 @@
 package cn.wowtw_backend.controller;
 
-import cn.wowtw_backend.model.infoGroup.GearPlate;
 import cn.wowtw_backend.model.infoGroup.GearPlateDTO;
 import cn.wowtw_backend.service.TestService;
 import cn.wowtw_backend.utils.Result;

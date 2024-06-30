@@ -47,8 +47,8 @@ public class TestServiceImpl implements TestService {
             gearPlateDTO.setIsExtra(gearPlate.getIsExtra());
 
             if (gearPlate.getIsExtra()) {
-                List<GearExtra> gearExtras = gearPlateRepository.findGearExtrasByTalentId(talentId);
-                log.info("getExtrasByTalentId - Extras size: {} - Talent id: {}", gearExtras.size(), talentId);
+                List<GearExtra> gearExtras = gearPlateRepository.findGearExtrasByTalentId(talentId, gearPlate.getId());
+                log.info("getExtrasByTalentId - Extras size: {} - Talent id: {} - plate id: {}", gearExtras.size(), talentId, gearPlate.getId());
                 for (GearExtra gearExtra : gearExtras) {
                     log.info("gearExtra desc: {}", gearExtra.getDescription());
                 }

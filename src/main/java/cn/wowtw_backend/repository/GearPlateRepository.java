@@ -15,6 +15,6 @@ public interface GearPlateRepository extends JpaRepository<GearPlate, Integer> {
     @Query("SELECT gm FROM GearMark gm JOIN GearPlateGearMark gpgm ON gm.id = gpgm.gearMark.id WHERE gpgm.gearPlate.id = :gearPlateId")
     List<GearMark> findGearMarksByGearId(Integer gearPlateId);
 
-    @Query("SELECT ge FROM GearExtra ge JOIN GearPlateGearExtra gpge ON ge.id = gpge.gearExtra.id WHERE gpge.talent.id = :talentId")
-    List<GearExtra> findGearExtrasByTalentId(Integer talentId);
+    @Query("SELECT ge FROM GearExtra ge JOIN GearPlateGearExtra gpge ON ge.id = gpge.gearExtra.id WHERE gpge.talent.id = :talentId AND gpge.gearPlate.id = :gearPlateId")
+    List<GearExtra> findGearExtrasByTalentId(Integer talentId, Integer gearPlateId);
 }

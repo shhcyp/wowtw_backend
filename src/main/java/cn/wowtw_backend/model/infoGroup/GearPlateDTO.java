@@ -8,12 +8,20 @@ import java.util.List;
 public class GearPlateDTO {
 
     private String icon;
+
     private String part;
+
     private String name;
+
     private Byte quality;
+
     private Boolean isMark;
+
     private List<GearMarkDTO> gearMarkDTOS;
+
     private String drop;
+
     private Boolean isExtra;
+
     private List<GearExtraDTO> gearExtraDTOS;
 }

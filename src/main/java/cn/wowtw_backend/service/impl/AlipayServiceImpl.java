@@ -18,6 +18,7 @@ import com.alipay.api.response.AlipayTradeCancelResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AlipayServiceImpl implements AlipayService {
@@ -141,7 +143,7 @@ public class AlipayServiceImpl implements AlipayService {
                         scheduler.shutdown();
                     }
                 } catch (AlipayApiException e) {
-                    e.printStackTrace();
+                    log.info("出现异常：", e);
                     scheduler.shutdown();
                 }
             }

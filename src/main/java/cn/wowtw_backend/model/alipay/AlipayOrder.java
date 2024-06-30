@@ -22,7 +22,7 @@ public class AlipayOrder {
     @Column(name = "out_trade_no", nullable = false, unique = true, length = 64)
     private String outTradeNo;
 
-    @Column(name = "alipay_qr_code", length = 255)
+    @Column(name = "alipay_qr_code")
     private String alipayQRCode;
 
     @Column(name = "phone_number", length = 20)
