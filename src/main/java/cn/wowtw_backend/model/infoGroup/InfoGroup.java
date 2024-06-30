@@ -10,13 +10,9 @@ import java.util.List;
 @Entity
 @Table(name = "wow_info_group")
 public class InfoGroup {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-
-    @OneToMany(mappedBy = "infoGroup")
-    @JsonIgnore
-    private List<TalentInfoGroup> talentInfoGroups;
-
 }

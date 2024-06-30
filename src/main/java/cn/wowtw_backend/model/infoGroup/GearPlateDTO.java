@@ -1,29 +1,19 @@
 package cn.wowtw_backend.model.infoGroup;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-@Data
-@MappedSuperclass
-public class GearBase {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@Data
+public class GearPlateDTO {
 
     private String icon;
-
     private String part;
-
     private String name;
-
     private Byte quality;
-
-    @Column(name = "is_mark")
     private Boolean isMark;
-
+    private List<GearMarkDTO> gearMarkDTOS;
     private String drop;
-
-    @Column(name = "is_extra")
     private Boolean isExtra;
+    private List<GearExtraDTO> gearExtraDTOS;
 }

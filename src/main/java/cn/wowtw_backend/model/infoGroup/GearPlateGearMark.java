@@ -6,20 +6,21 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "wow_talents_info_group")
-public class TalentInfoGroup {
+@Table(name = "wow_plates_gear_marks")
+public class GearPlateGearMark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "talent_id")
-    private Talent talent;
+    @JoinColumn(name = "plate_id")
+    @JsonIgnore
+    private GearPlate gearPlate;
 
     @ManyToOne
-    @JoinColumn(name = "info_group_id")
-    private InfoGroup infoGroup;
+    @JoinColumn(name = "gear_mark_id")
+    private GearMark gearMark;
 
     private Integer sort;
 }
