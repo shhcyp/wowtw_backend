@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GearPlateDTO {
+public class InfoGroupDetailGearDTO implements InfoGroupDetail{
 
     private String icon;
 
