@@ -21,7 +21,7 @@ public class TalentTreeTreeImage {
     @ManyToOne
     @JoinColumn(name = "tree_image_id")
     @JsonIgnore
-    private TreeImage treeImage;
+    private TalentTreeImage talentTreeImage;
 
     private Integer sort;
 }

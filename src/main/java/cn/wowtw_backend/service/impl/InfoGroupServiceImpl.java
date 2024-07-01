@@ -1,26 +1,31 @@
 package cn.wowtw_backend.service.impl;
 
 import cn.wowtw_backend.model.infoGroup.*;
-import cn.wowtw_backend.repository.GearExtraRepository;
-import cn.wowtw_backend.repository.GearMarkRepository;
-import cn.wowtw_backend.repository.GearPlateRepository;
-import cn.wowtw_backend.repository.InfoGroupRepository;
+import cn.wowtw_backend.repository.*;
 import cn.wowtw_backend.service.InfoGroupService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class InfoGroupServiceImpl implements InfoGroupService {
 
     private final InfoGroupRepository infoGroupRepository;
     private final GearPlateRepository gearPlateRepository;
+    private final GearMailRepository gearMailRepository;
+    private final GearLeatherRepository gearLeatherRepository;
+    private final GearClothRepository gearClothRepository;
+    private final GearMiscellaneousRepository gearMiscellaneousRepository;
+    private final GearWeaponRepository gearWeaponRepository;
     private final GearMarkRepository gearMarkRepository;
     private final GearExtraRepository gearExtraRepository;
+    private final TalentTreeRepository talentTreeRepository;
 
     // 根据talentId将护甲分类
     private enum InfoGroupType {
@@ -66,8 +71,6 @@ public class InfoGroupServiceImpl implements InfoGroupService {
             infoGroupResponseDTO.setTitle(group.getName());
 
             // 分条件进行设置details，分为Gear和TalentTree两种，通过查询数据库实现
-            List<InfoGroupDetail> detailGearDTOS = new ArrayList<>(); // 装备类的DTO
-
             switch (group.getId()) {
                 case 1:
                     // 匹配到护甲组,根据装备类型走不同的通道查询
@@ -80,32 +83,45 @@ public class InfoGroupServiceImpl implements InfoGroupService {
                             break;
                         case MAIL:
                             // 查询锁甲
+                            List<GearBase> gearMails = gearMailRepository.findGearMailByTalentId(talentId);
+                            infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearMails, talentId));
                             break;
                         case LEATHER:
                             // 查询皮甲
+                            List<GearBase> gearLeather = gearLeatherRepository.findGearLeatherByTalentId(talentId);
+                            infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearLeather, talentId));
                             break;
                         case CLOTH:
                             // 查询布甲
+                            List<GearBase> gearCloth = gearClothRepository.findGearClothByTalentId(talentId);
+                            infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearCloth, talentId));
                             break;
                     }
                     break;
                 case 2:
                     // 匹配到杂项组
+                    List<GearBase> gearMiscellaneous = gearMiscellaneousRepository.findGearMiscellaneousByTalentId(talentId);
+                    infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearMiscellaneous, talentId));
                     break;
                 case 3:
                     // 匹配到武器组
+                    List<GearBase> gearWeapon = gearWeaponRepository.findGearWeaponByTalentId(talentId);
+                    infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearWeapon, talentId));
                     break;
                 case 4:
                     // 匹配到主手武器组
+                    List<GearBase> gearWeaponMainHand = gearWeaponRepository.findWeaponMainHandByTalentId(talentId);
+                    infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearWeaponMainHand, talentId));
                     break;
                 case 5:
                     // 匹配到副手武器组
+                    List<GearBase> gearWeaponOffHand = gearWeaponRepository.findWeaponOffHandByTalentId(talentId);
+                    infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearWeaponOffHand, talentId));
                     break;
                 case 6:
-                    // 匹配到爆发天赋树
-                    break;
-                case 7:
-                    // 匹配到常规天赋树
+                    // 匹配到天赋树
+                    List<TalentTree> talentTrees = talentTreeRepository.findBurstTalentTreeByTalentId(talentId);
+                    infoGroupResponseDTO.setDetails(convertTalentTreesToDTOs(talentTrees));
                     break;
             }
 
@@ -117,8 +133,9 @@ public class InfoGroupServiceImpl implements InfoGroupService {
     }
 
     private List<InfoGroupDetail> convertGearsToGearDTOs(List<GearBase> gears, Integer talentId) {
-        List<InfoGroupDetail> detailGearDTOS = new ArrayList<>(); // 装备类的DTO
         // List<GearBase> gears = gearPlateRepository.findGearPlateByTalentId(talentId);
+        // 装备类的DTO,由于有多个种类使用多态
+        List<InfoGroupDetail> detailGearDTOS = new ArrayList<>();
         for (GearBase gear : gears) {
             InfoGroupDetailGearDTO detailGearDTO = new InfoGroupDetailGearDTO();
             detailGearDTO.setIcon(gear.getIcon());
@@ -169,5 +186,25 @@ public class InfoGroupServiceImpl implements InfoGroupService {
             gearExtraDTOS.add(gearExtraDTO);
         }
         return gearExtraDTOS;
+    }
+
+    private List<InfoGroupDetail> convertTalentTreesToDTOs(List<TalentTree> talentTrees) {
+        List<InfoGroupDetail> detailTalentTreesDTOS = new ArrayList<>();
+        for (TalentTree talentTree : talentTrees) {
+            InfoGroupDetailTalentTreeDTO detailTalentTreeDTO = new InfoGroupDetailTalentTreeDTO();
+            detailTalentTreeDTO.setTalentName(talentTree.getName());
+
+            List<TalentTreeImage> talentTreeImages = talentTreeRepository.findTreeImagesByTalentTreeId(talentTree.getId());
+            List<TalentTreeImageDTO> talentTreeImageDTOS = new ArrayList<>();
+            for (TalentTreeImage talentTreeImage : talentTreeImages) {
+                TalentTreeImageDTO talentTreeImageDTO = new TalentTreeImageDTO();
+                talentTreeImageDTO.setName(talentTreeImage.getName());
+                talentTreeImageDTO.setImage(talentTreeImage.getImage());
+                talentTreeImageDTOS.add(talentTreeImageDTO);
+            }
+            detailTalentTreeDTO.setImages(talentTreeImageDTOS);
+            detailTalentTreesDTOS.add(detailTalentTreeDTO);
+        }
+        return detailTalentTreesDTOS;
     }
 }

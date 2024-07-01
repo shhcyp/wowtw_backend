@@ -10,6 +10,4 @@ public interface InfoGroupRepository extends JpaRepository<InfoGroup, Integer> {
 
     @Query("SELECT ig FROM InfoGroup ig JOIN TalentInfoGroup tig ON ig.id = tig.infoGroup.id WHERE tig.talent.id = :talentId")
     List<InfoGroup> findInfoGroupByTalentId(Integer talentId);
-
-
 }

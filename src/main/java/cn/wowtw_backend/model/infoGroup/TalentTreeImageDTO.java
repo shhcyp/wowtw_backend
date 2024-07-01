@@ -5,9 +5,7 @@ import lombok.Data;
 @Data
 public class TalentTreeImageDTO {
 
-    private String first;
+    private String name;
 
-    private String center;
-
-    private String last;
+    private String image;
 }
