@@ -1,6 +1,5 @@
 package cn.wowtw_backend.controller;
 
-import cn.wowtw_backend.model.infoGroup.InfoGroup;
 import cn.wowtw_backend.model.infoGroup.InfoGroupResponseDTO;
 import cn.wowtw_backend.service.InfoGroupService;
 import cn.wowtw_backend.utils.Result;

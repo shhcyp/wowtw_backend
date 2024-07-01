@@ -1,6 +1,8 @@
 package cn.wowtw_backend.service.impl;
 
 import cn.wowtw_backend.model.infoGroup.*;
+import cn.wowtw_backend.repository.GearExtraRepository;
+import cn.wowtw_backend.repository.GearMarkRepository;
 import cn.wowtw_backend.repository.GearPlateRepository;
 import cn.wowtw_backend.repository.InfoGroupRepository;
 import cn.wowtw_backend.service.InfoGroupService;
@@ -17,6 +19,8 @@ public class InfoGroupServiceImpl implements InfoGroupService {
 
     private final InfoGroupRepository infoGroupRepository;
     private final GearPlateRepository gearPlateRepository;
+    private final GearMarkRepository gearMarkRepository;
+    private final GearExtraRepository gearExtraRepository;
 
     // 根据talentId将护甲分类
     private enum InfoGroupType {
@@ -57,100 +61,113 @@ public class InfoGroupServiceImpl implements InfoGroupService {
             // 初始化InfoGroupResponseDTO元素
             InfoGroupResponseDTO infoGroupResponseDTO = new InfoGroupResponseDTO();
 
+            // 设置id和title
             infoGroupResponseDTO.setId(group.getId());
             infoGroupResponseDTO.setTitle(group.getName());
 
-            // 初始化信息组的details属性，分为Gear和TalentTree两个
-            // ！！！先做Gear
-            List<InfoGroupDetail> infoGroupDetailGearDTOS = new ArrayList<>();
+            // 分条件进行设置details，分为Gear和TalentTree两种，通过查询数据库实现
+            List<InfoGroupDetail> detailGearDTOS = new ArrayList<>(); // 装备类的DTO
 
-            // 为信息组设置title），查询details
             switch (group.getId()) {
                 case 1:
-
-                    // 根据talentID查询护甲组
-
+                    // 匹配到护甲组,根据装备类型走不同的通道查询
                     switch (getGearByTalentId(talentId)) {
                         case PLATE:
                             // 查询对应板甲
-                            List<GearPlate> gearPlates = gearPlateRepository.findGearPlateByTalentId(talentId);
+                            List<GearBase> gearPlates = gearPlateRepository.findGearPlateByTalentId(talentId);
                             // GearPlate类型转换为GearPlateDTO类型，写入infoGroupDetailGearDTOS
-                            for (GearPlate gearPlate : gearPlates) {
-                                InfoGroupDetailGearDTO detailGearDTO = new InfoGroupDetailGearDTO();
-
-                                detailGearDTO.setIcon(gearPlate.getIcon());
-                                detailGearDTO.setPart(gearPlate.getPart());
-                                detailGearDTO.setName(gearPlate.getName());
-                                detailGearDTO.setQuality(gearPlate.getQuality());
-                                detailGearDTO.setIsMark(gearPlate.getIsMark());
-
-                                if (gearPlate.getIsMark()) {
-                                    List<GearMark> gearMarks = gearPlateRepository.findGearMarksByGearId(gearPlate.getId());
-                                    List<GearMarkDTO> gearMarkDTOS = new ArrayList<>();
-                                    for (GearMark gearMark : gearMarks) {
-                                        GearMarkDTO gearMarkDTO = new GearMarkDTO();
-
-                                        gearMarkDTO.setIcon(gearMark.getIcon());
-                                        gearMarkDTO.setName(gearMark.getName());
-
-                                        gearMarkDTOS.add(gearMarkDTO);
-                                    }
-                                    detailGearDTO.setGearMarkDTOS(gearMarkDTOS);
-                                } else {
-                                    detailGearDTO.setGearMarkDTOS(null);
-                                }
-
-                                detailGearDTO.setDrop(gearPlate.getDrop());
-                                detailGearDTO.setIsExtra(gearPlate.getIsExtra());
-
-                                if (gearPlate.getIsExtra()) {
-                                    List<GearExtra> gearExtras = gearPlateRepository.findGearExtrasByTalentId(talentId, gearPlate.getId());
-                                    List<GearExtraDTO> gearExtraDTOS = new ArrayList<>();
-                                    for (GearExtra gearExtra : gearExtras) {
-                                        GearExtraDTO gearExtraDTO = new GearExtraDTO();
-                                        gearExtraDTO.setIcon(gearExtra.getIcon());
-                                        gearExtraDTO.setDescription(gearExtra.getDescription());
-                                        gearExtraDTO.setQuality(gearExtra.getQuality());
-
-                                        gearExtraDTOS.add(gearExtraDTO);
-                                    }
-                                    detailGearDTO.setGearExtraDTOS(gearExtraDTOS);
-                                } else {
-                                    detailGearDTO.setGearExtraDTOS(null);
-                                }
-                                infoGroupDetailGearDTOS.add(detailGearDTO);
-                            }
-                            infoGroupResponseDTO.setDetails(infoGroupDetailGearDTOS);
+                            infoGroupResponseDTO.setDetails(convertGearsToGearDTOs(gearPlates, talentId));
+                            break;
                         case MAIL:
                             // 查询锁甲
+                            break;
                         case LEATHER:
                             // 查询皮甲
+                            break;
                         case CLOTH:
                             // 查询布甲
+                            break;
                     }
+                    break;
                 case 2:
-
-                    // 查询杂项组
+                    // 匹配到杂项组
+                    break;
                 case 3:
-
-                    // 查询武器组
+                    // 匹配到武器组
+                    break;
                 case 4:
-
-                    // 查询主手武器组
+                    // 匹配到主手武器组
+                    break;
                 case 5:
-
-                    // 查询副手武器组
+                    // 匹配到副手武器组
+                    break;
                 case 6:
-
-                    // 查询爆发天赋树
+                    // 匹配到爆发天赋树
+                    break;
                 case 7:
-
-                    // 查询常规天赋树
+                    // 匹配到常规天赋树
+                    break;
             }
 
+            // 写入DTO数组
             infoGroupResponseDTOS.add(infoGroupResponseDTO);
         }
 
         return infoGroupResponseDTOS;
+    }
+
+    private List<InfoGroupDetail> convertGearsToGearDTOs(List<GearBase> gears, Integer talentId) {
+        List<InfoGroupDetail> detailGearDTOS = new ArrayList<>(); // 装备类的DTO
+        // List<GearBase> gears = gearPlateRepository.findGearPlateByTalentId(talentId);
+        for (GearBase gear : gears) {
+            InfoGroupDetailGearDTO detailGearDTO = new InfoGroupDetailGearDTO();
+            detailGearDTO.setIcon(gear.getIcon());
+            detailGearDTO.setPart(gear.getPart());
+            detailGearDTO.setName(gear.getName());
+            detailGearDTO.setQuality(gear.getQuality());
+            detailGearDTO.setIsMark(gear.getIsMark());
+            if (gear.getIsMark()) {
+                List<GearMark> gearMarks = gearMarkRepository.findGearMarksByGearId(gear.getId());
+                detailGearDTO.setMarks(convertGearMarksToGearMarkDTOs(gearMarks));
+            } else {
+                detailGearDTO.setMarks(null);
+            }
+            detailGearDTO.setDrop(gear.getDrop());
+            detailGearDTO.setIsExtra(gear.getIsExtra());
+            if (gear.getIsExtra()) {
+                List<GearExtra> gearExtras = gearExtraRepository.findGearExtrasByTalentId(talentId, gear.getId());
+                detailGearDTO.setExtras(convertGearExtrasToDTOs(gearExtras));
+            } else {
+                detailGearDTO.setExtras(null);
+            }
+            detailGearDTOS.add(detailGearDTO);
+        }
+        return detailGearDTOS;
+    }
+
+    private List<GearMarkDTO> convertGearMarksToGearMarkDTOs(List<GearMark> gearMarks) {
+        List<GearMarkDTO> gearMarkDTOS = new ArrayList<>();
+        for (GearMark gearMark : gearMarks) {
+            GearMarkDTO gearMarkDTO = new GearMarkDTO();
+
+            gearMarkDTO.setIcon(gearMark.getIcon());
+            gearMarkDTO.setName(gearMark.getName());
+
+            gearMarkDTOS.add(gearMarkDTO);
+        }
+        return gearMarkDTOS;
+    }
+
+    private List<GearExtraDTO> convertGearExtrasToDTOs(List<GearExtra> gearExtras) {
+        List<GearExtraDTO> gearExtraDTOS = new ArrayList<>();
+        for (GearExtra gearExtra : gearExtras) {
+            GearExtraDTO gearExtraDTO = new GearExtraDTO();
+            gearExtraDTO.setIcon(gearExtra.getIcon());
+            gearExtraDTO.setDescription(gearExtra.getDescription());
+            gearExtraDTO.setQuality(gearExtra.getQuality());
+
+            gearExtraDTOS.add(gearExtraDTO);
+        }
+        return gearExtraDTOS;
     }
 }

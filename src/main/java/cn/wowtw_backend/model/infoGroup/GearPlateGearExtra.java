@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "wow_plates_gear_extras")
 @EqualsAndHashCode(callSuper = true)
-public class GearPlateGearExtra extends GearBaseGearExtra{
+public class GearPlateGearExtra extends GearBaseGearExtra {
 
     @ManyToOne
     @JoinColumn(name = "plate_id")

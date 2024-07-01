@@ -17,11 +17,11 @@ public class InfoGroupDetailGearDTO implements InfoGroupDetail{
 
     private Boolean isMark;
 
-    private List<GearMarkDTO> gearMarkDTOS;
+    private List<GearMarkDTO> marks;
 
     private String drop;
 
     private Boolean isExtra;
 
-    private List<GearExtraDTO> gearExtraDTOS;
+    private List<GearExtraDTO> extras;
 }

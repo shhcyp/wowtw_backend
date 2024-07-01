@@ -1,6 +1,5 @@
 package cn.wowtw_backend.repository;
 
-import cn.wowtw_backend.model.infoGroup.GearExtra;
 import cn.wowtw_backend.model.infoGroup.InfoGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
