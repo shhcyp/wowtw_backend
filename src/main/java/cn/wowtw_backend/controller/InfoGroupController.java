@@ -1,6 +1,6 @@
 package cn.wowtw_backend.controller;
 
-import cn.wowtw_backend.model.infoGroup.InfoGroupResponseDTO;
+import cn.wowtw_backend.model.infoGroup.InfoGroupsResponseDTO;
 import cn.wowtw_backend.service.InfoGroupService;
 import cn.wowtw_backend.utils.Result;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class InfoGroupController {
 
     @GetMapping("/{talentId}")
     public Result getInfoGroup(@PathVariable Integer talentId) {
-        List<InfoGroupResponseDTO> infoGroupResponse = infoGroupService.getInfoGroupByTalentId(talentId);
+        List<InfoGroupsResponseDTO> infoGroupResponse = infoGroupService.getInfoGroupByTalentId(talentId);
         return Result.success(infoGroupResponse);
     }
 }

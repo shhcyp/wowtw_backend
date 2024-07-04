@@ -1,14 +1,13 @@
 package cn.wowtw_backend.model.infoGroup;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// 用于阻止JpaRepository自动去重
 @Data
-@MappedSuperclass
-public class GearBase {
+@AllArgsConstructor
+public class GearBaseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String icon;
@@ -19,5 +18,9 @@ public class GearBase {
 
     private Byte quality;
 
+    private Boolean isMark;
+
     private String drop;
+
+    private Boolean isExtra;
 }

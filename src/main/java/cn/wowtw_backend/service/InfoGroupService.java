@@ -1,9 +1,9 @@
 package cn.wowtw_backend.service;
 
-import cn.wowtw_backend.model.infoGroup.InfoGroupResponseDTO;
+import cn.wowtw_backend.model.infoGroup.InfoGroupsResponseDTO;
 
 import java.util.List;
 
 public interface InfoGroupService {
-    List<InfoGroupResponseDTO> getInfoGroupByTalentId(Integer talentId);
+    List<InfoGroupsResponseDTO> getInfoGroupByTalentId(Integer talentId);
 }

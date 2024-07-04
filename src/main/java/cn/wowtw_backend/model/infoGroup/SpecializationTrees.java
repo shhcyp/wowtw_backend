@@ -4,20 +4,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@MappedSuperclass
-public class GearBase {
+@Entity
+@Table(name = "specialization_trees")
+public class SpecializationTrees {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String icon;
-
-    private String part;
-
     private String name;
 
-    private Byte quality;
-
-    private String drop;
+    private String image;
 }
