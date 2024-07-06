@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 public class TalentsMainHandWeapons extends TalentsGearBase {
 
     @ManyToOne
-    @JoinColumn(name = "main_hand_weapons_id")
+    @JoinColumn(name = "weapons_id")
     @JsonIgnore
-    private MainHandWeapons mainHandWeapons;
+    private Weapons weapons;
 }

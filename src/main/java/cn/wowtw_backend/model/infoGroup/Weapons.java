@@ -4,6 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "two_hand_weapons")
-public class TwoHandWeapons extends GearBase {
+@Table(name = "weapons")
+public class Weapons extends GearBase {
 }

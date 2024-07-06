@@ -23,9 +23,7 @@ public class InfoGroupServiceImpl implements InfoGroupService {
     private final LeathersRepository leathersRepository;
     private final ClothesRepository clothesRepository;
     private final MiscellaneaRepository miscellaneaRepository;
-    private final TwoHandWeaponsRepository twoHandWeaponsRepository;
-    private final MainHandWeaponsRepository mainHandWeaponsRepository;
-    private final OffHandWeaponsRepository offHandWeaponsRepository;
+    private final WeaponsRepository weaponsRepository;
     private final GearMarksRepository gearMarksRepository;
     private final GearExtrasRepository gearExtrasRepository;
     private final SpecializationsRepository specializationsRepository;
@@ -129,7 +127,7 @@ public class InfoGroupServiceImpl implements InfoGroupService {
                     break;
                 case 3:
                     // 匹配到武器组
-                    List<GearBaseDTO> twoHandWeapons = twoHandWeaponsRepository.findTwoHandWeaponsByTalentId(talentId);
+                    List<GearBaseDTO> twoHandWeapons = weaponsRepository.findTwoHandWeaponsByTalentId(talentId);
                     infoGroupsResponseDTO.setDetails(convertGearsToGearDTOs(
                             twoHandWeapons,
                             gearMarksRepository::findTwoHandWeaponsMarksByGearId,
@@ -138,7 +136,7 @@ public class InfoGroupServiceImpl implements InfoGroupService {
                     break;
                 case 4:
                     // 匹配到主手武器组
-                    List<GearBaseDTO> gearMainHandWeapons = mainHandWeaponsRepository.findMainHandWeaponsByTalentId(talentId);
+                    List<GearBaseDTO> gearMainHandWeapons = weaponsRepository.findMainHandWeaponsByTalentId(talentId);
                     infoGroupsResponseDTO.setDetails(convertGearsToGearDTOs(
                             gearMainHandWeapons,
                             gearMarksRepository::findMainHandWeaponsMarksByGearId,
@@ -147,7 +145,7 @@ public class InfoGroupServiceImpl implements InfoGroupService {
                     break;
                 case 5:
                     // 匹配到副手武器组
-                    List<GearBaseDTO> gearOffHandWeapons = offHandWeaponsRepository.findOffHandWeaponsByTalentId(talentId);
+                    List<GearBaseDTO> gearOffHandWeapons = weaponsRepository.findOffHandWeaponsByTalentId(talentId);
                     infoGroupsResponseDTO.setDetails(convertGearsToGearDTOs(
                             gearOffHandWeapons,
                             gearMarksRepository::findOffHandWeaponsMarksByGearId,
