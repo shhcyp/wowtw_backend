@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface MiscellaneaRepository extends JpaRepository<Miscellanea, Integer> {
 
-    @Query("SELECT new cn.wowtw_backend.model.infoGroup.GearBaseDTO(t.id, m.icon, m.part, m.name, m.quality, t.isMark, m.drop, t.isExtra) FROM Miscellanea m JOIN TalentsMiscellanea t ON m.id = t.miscellanea.id WHERE t.talents.id = :talentId")
+    @Query("SELECT new cn.wowtw_backend.model.infoGroup.GearBaseDTO(t.id, m.icon, m.part, m.name, m.quality, t.isMark, m.drop, t.isExtra) FROM Miscellanea m JOIN TalentsMiscellanea t ON m.id = t.miscellanea.id WHERE t.talents.id = :talentId ORDER BY t.sort ASC")
     List<GearBaseDTO> findMiscellaneaByTalentId(Integer talentId);
 }

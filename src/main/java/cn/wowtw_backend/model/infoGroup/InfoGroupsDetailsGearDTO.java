@@ -1,5 +1,6 @@
 package cn.wowtw_backend.model.infoGroup;
 
+import cn.wowtw_backend.utils.QualityMapper;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class InfoGroupsDetailsGearDTO implements InfoGroupsDetails {
 
     private String name;
 
-    private Byte quality;
+    private String quality;
 
     private Boolean isMark;
 
@@ -24,4 +25,8 @@ public class InfoGroupsDetailsGearDTO implements InfoGroupsDetails {
     private Boolean isExtra;
 
     private List<GearExtrasDTO> extras;
+
+    public void setQuality(Byte quality) {
+        this.quality = QualityMapper.mapQuality(quality);
+    }
 }

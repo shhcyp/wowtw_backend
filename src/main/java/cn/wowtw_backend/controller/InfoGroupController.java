@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/info")
+@RequestMapping("/api")
 @AllArgsConstructor
 public class InfoGroupController {
 
     private final InfoGroupService infoGroupService;
 
-    @GetMapping("/{talentId}")
+    @GetMapping("/infoGroup/{talentId}")
     public Result getInfoGroup(@PathVariable Integer talentId) {
         List<InfoGroupsResponseDTO> infoGroupResponse = infoGroupService.getInfoGroupByTalentId(talentId);
         return Result.success(infoGroupResponse);

@@ -1,20 +1,10 @@
-package cn.wowtw_backend.model.infoGroup;
-
-import lombok.Data;
+package cn.wowtw_backend.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
-public class GearExtrasDTO {
+public class QualityMapper {
 
-    private String icon;
-
-    private String description;
-
-    private String quality;
-
-    // quality值到描述的映射
     private static final Map<Byte, String> qualityMap = new HashMap<>();
 
     static {
@@ -28,15 +18,7 @@ public class GearExtrasDTO {
         qualityMap.put((byte) 7, "any");
     }
 
-    // 构造函数
-    public GearExtrasDTO(String icon, String description, Byte quality) {
-        this.icon = icon;
-        this.description = description;
-        this.quality = mapQuality(quality);
-    }
-
-    // 质量映射方法
-    private String mapQuality(Byte quality) {
+    public static String mapQuality(Byte quality) {
         return qualityMap.getOrDefault(quality, "unknown");
     }
 }
