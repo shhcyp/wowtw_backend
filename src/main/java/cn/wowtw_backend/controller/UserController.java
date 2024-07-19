@@ -96,6 +96,8 @@ public class UserController {
             data.put("editCount", userInDB.getEditCount());
             data.put("token", token);
 
+            log.info("token为：{}", token);
+
             return new Result(1, "登录成功，跳转中", data);
         }
         return Result.fail("账号或密码错误");
