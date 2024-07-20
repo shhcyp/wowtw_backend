@@ -158,4 +158,11 @@ public class UserController {
         Boolean result = userService.updateNickname(renickname);
         return result ? Result.success() : Result.fail();
     }
+
+    @GetMapping("/identifiers/exists")
+    public Result inviteIDExists(String identifier) {
+        log.info("查询{}是否存在", identifier);
+        boolean result = userService.checkIdentifierExists(identifier);
+        return result ? Result.success("邀请码可用") : Result.fail("无效邀请码");
+    }
 }

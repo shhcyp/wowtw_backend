@@ -39,9 +39,9 @@ public class AlipayController {
     }
 
     // 取消交易
-    @PostMapping("/cancel")
-    public Result cancelPayment(@RequestParam String outTradeNo) throws AlipayApiException {
+    @GetMapping("/cancel")
+    public Result cancelPayment(String outTradeNo) throws AlipayApiException {
         alipayService.cancelPayment(outTradeNo);
-        return new Result(1, "success cancel trade", null);
+        return new Result(0, "success cancel trade", null);
     }
 }
