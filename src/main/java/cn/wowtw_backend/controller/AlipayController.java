@@ -42,6 +42,6 @@ public class AlipayController {
     @GetMapping("/cancel")
     public Result cancelPayment(String outTradeNo) throws AlipayApiException {
         alipayService.cancelPayment(outTradeNo);
-        return new Result(0, "success cancel trade", null);
+        return new Result(0, "支付超时，订单已关闭", null);
     }
 }
