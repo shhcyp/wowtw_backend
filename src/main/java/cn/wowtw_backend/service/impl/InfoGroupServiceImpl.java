@@ -17,6 +17,7 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class InfoGroupServiceImpl implements InfoGroupService {
 
+    private final TalentsRepository talentsRepository;
     private final InfoGroupsRepository infoGroupsRepository;
     private final PlatesRepository platesRepository;
     private final MailsRepository mailsRepository;
@@ -164,6 +165,11 @@ public class InfoGroupServiceImpl implements InfoGroupService {
         }
 
         return infoGroupsResponseDTOS;
+    }
+
+    @Override
+    public List<Talents> getLatestTalentsVersion() {
+        return talentsRepository.findAll();
     }
 
     private List<InfoGroupsDetails> convertGearsToGearDTOs(

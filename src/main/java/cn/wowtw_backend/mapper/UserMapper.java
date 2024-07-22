@@ -23,16 +23,24 @@ public interface UserMapper {
     int countByPhoneNumber(String phoneNumber);
 
     // 用户注册，返回插入行数，为1则注册成功，否则失败
-    @Insert("insert into wowtw_users(username, userID, password, phone_number, question, answer, identifier, invite_identifier, create_time, update_time) values (#{username}, #{userID}, #{password}, #{phoneNumber}, #{question}, #{answer}, #{identifier}, #{inviteIdentifier}, #{createTime}, #{updateTime})")
+    @Insert("insert into wowtw_users(username, userID, password, phone_number, question, answer, avatar, nickname, identifier, invite_identifier, create_time, update_time, payment_info, session_id) values (#{username}, #{userID}, #{password}, #{phoneNumber}, #{question}, #{answer}, #{avatar}, #{nickname}, #{identifier}, #{inviteIdentifier}, #{createTime}, #{updateTime}, #{paymentInfo}, #{sessionId})")
     int register(User user);
 
     // 为userID准备的一个接口
     @Select("SELECT userID FROM wowtw_users WHERE userID = #{userID}")
     Integer findUserID(Integer userID);
 
-    // 用户登录
+    // 用户登录 + 登录限制
     @Select("select * from wowtw_users where username = #{username}")
     User getByUsername(String username);
+
+    // 更新session_id
+    @Update("UPDATE wowtw_users SET session_id = #{sessionId} WHERE id = #{userId}")
+    void updateSessionId(Integer userId, String sessionId);
+
+    // 更新session_active
+    @Update("UPDATE wowtw_users SET session_active = #{sessionActive} WHERE id = #{userId}")
+    void updateSessionActive(Integer userId, Boolean sessionActive);
 
     // 找回密码用户名手机号验证
     @Select("select * from wowtw_users where username = #{username} and phone_number = #{phoneNumber}")

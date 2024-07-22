@@ -20,10 +20,12 @@ public class User {
 
     private String username;
 
+    @Column(name = "userID")
     private Integer userID;
 
     private String password;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     private String question;
@@ -36,16 +38,21 @@ public class User {
 
     private String identifier;
 
+    @Column(name = "invite_identifier")
     private String inviteIdentifier;
 
+    @Column(name = "create_time")
     private LocalDateTime createTime;
 
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
 
-    @Column(name = "last_avatar_update")
-    private LocalDateTime lastAvatarUpdate;
+    @Column(name = "payment_info")
+    private String paymentInfo;
 
-    private String editCount;
+    @Column(name = "session_id")
+    private String sessionId;
 
-    // 新增支付相关字段
+    @Column(name = "session_active")
+    private Boolean sessionActive;
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -74,30 +75,17 @@ public class UserController {
     // 用户登录
     @PostMapping("/user/login")
     public Result login(@RequestBody User user) {
-        log.info("用户登录{}", user);
+        log.info("用户登录: {}", user);
         User userInDB = userService.login(user.getUsername());
+        log.info("登录第一步先查询数据库中用户信息 {}", userInDB);
         if (userInDB == null) {
             return Result.fail("账号或密码错误");
         }
 
         Boolean isMatch = userService.checkPassword(userInDB, user.getPassword());
         if (isMatch) {
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("username", userInDB.getUsername());
-
-            String token = JwtUtils.generateJwt(claims);
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("id", userInDB.getId());
-            data.put("userID", userInDB.getUserID());
-            data.put("userAvatar", userInDB.getAvatar());
-            data.put("nickname", userInDB.getNickname());
-            data.put("identifier", userInDB.getIdentifier());
-            data.put("editCount", userInDB.getEditCount());
-            data.put("token", token);
-
-            log.info("token为：{}", token);
-
+            Map<String, Object> data = userService.generateLoginResponse(userInDB);
+            log.info("登录成功, 用户名: {}, token: {}", userInDB.getUsername(), data.get("token"));
             return new Result(1, "登录成功，跳转中", data);
         }
         return Result.fail("账号或密码错误");
@@ -159,6 +147,7 @@ public class UserController {
         return result ? Result.success() : Result.fail();
     }
 
+    // 邀请码验证
     @GetMapping("/identifiers/exists")
     public Result inviteIDExists(String identifier) {
         log.info("查询{}是否存在", identifier);

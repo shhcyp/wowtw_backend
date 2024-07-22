@@ -155,6 +155,11 @@
             <artifactId>p6spy</artifactId>
             <version>3.9.1</version>
         </dependency>
+        <!-- WebSocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
 
         <!-- ⬇️ update dependencies ⬇️ -->
 

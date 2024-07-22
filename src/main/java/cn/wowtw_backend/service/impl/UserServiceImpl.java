@@ -2,31 +2,37 @@ package cn.wowtw_backend.service.impl;
 
 import cn.wowtw_backend.mapper.UserMapper;
 import cn.wowtw_backend.service.UserService;
+import cn.wowtw_backend.utils.CustomWebSocketHandler;
 import cn.wowtw_backend.utils.IdentifierGenerator;
 import cn.wowtw_backend.model.user.User;
 import cn.wowtw_backend.repository.UserRepository;
+import cn.wowtw_backend.utils.JwtUtils;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    private final CustomWebSocketHandler webSocketHandler;
+
     private int currentLength = 4;  // 初始长度为4位
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, UserRepository userRepository, CustomWebSocketHandler webSocketHandler) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.webSocketHandler = webSocketHandler;
     }
 
     // 查询所有用户信息
@@ -61,6 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setIdentifier(uniqueIdentifier);
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
+        user.setSessionId("init");
 
         // 密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -102,7 +109,57 @@ public class UserServiceImpl implements UserService {
     // 获取数据库中用户数据
     @Override
     public User login(String username) {
-        return userMapper.getByUsername(username);
+        return userRepository.getByUsername(username);
+    }
+
+    // 更新会话标识
+    public void updateSessionId(Integer userId, String sessionId) {
+        log.debug("更新用户 {} 的会话ID: {}", userId, sessionId);
+        userMapper.updateSessionId(userId, sessionId);
+    }
+
+    @Override
+    public Map<String, Object> generateLoginResponse(User userInDB) {
+        // 使之前的会话无效
+        userRepository.updateSessionActive(userInDB.getId(), false);
+
+        // 通知会话无效
+        webSocketHandler.notifySessionInvalid(userInDB.getUsername());
+
+        // 生成会话标识
+        String sessionId = UUID.randomUUID().toString();
+        userInDB.setSessionId(sessionId);
+        // 更新数据库中的用户记录
+        userRepository.save(userInDB);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", userInDB.getUsername());
+        claims.put("sessionId", sessionId);
+
+        String token = JwtUtils.generateJwt(userInDB.getUsername(), claims);
+        log.debug("生成的JWT: {}", token);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", userInDB.getId());
+        data.put("username", userInDB.getUsername());
+        data.put("userID", userInDB.getUserID());
+        data.put("userAvatar", userInDB.getAvatar());
+        data.put("nickname", userInDB.getNickname());
+        data.put("identifier", userInDB.getIdentifier());
+        data.put("token", token);
+        data.put("sessionId", sessionId);
+
+        // 激活新的会话
+        userRepository.updateSessionActive(userInDB.getId(), true);
+
+        return data;
+    }
+
+    // 登录限制专用
+    @Override
+    public User getByUsername(String username) {
+        log.debug("根据用户名 {} 获取用户信息", username);
+        return userRepository.getByUsername(username);
     }
 
     // 密码验证
@@ -129,27 +186,6 @@ public class UserServiceImpl implements UserService {
         // 密码加密
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.resetPassword(user);
-    }
-
-    // 修改头像，一周一次的，先废弃
-    // @Override
-    // @Transactional
-    public void updateAvatar(Integer id, String newAvatarUrl) throws Exception {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new Exception("用户不存在");
-        }
-
-        User user = userOptional.get();
-        LocalDateTime now = LocalDateTime.now();
-
-        if (user.getLastAvatarUpdate() != null && ChronoUnit.DAYS.between(user.getLastAvatarUpdate(), now) < 7) {
-            throw new Exception("头像每周只能修改一次");
-        }
-
-        user.setAvatar(newAvatarUrl);
-        user.setLastAvatarUpdate(now);
-        userRepository.save(user);
     }
 
     // 修改头像
@@ -182,5 +218,4 @@ public class UserServiceImpl implements UserService {
     public boolean checkIdentifierExists(String identifier) {
         return userRepository.existsByIdentifier(identifier);
     }
-
 }

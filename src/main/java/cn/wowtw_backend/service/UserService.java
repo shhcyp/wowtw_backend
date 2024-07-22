@@ -3,6 +3,7 @@ package cn.wowtw_backend.service;
 import cn.wowtw_backend.model.user.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     // 查询所有用户
@@ -19,6 +20,15 @@ public interface UserService {
 
     // 登录
     User login(String username);
+
+    // 登录响应数据
+    Map<String, Object> generateLoginResponse(User userInDB);
+
+    // 登录限制用
+    User getByUsername(String username);
+
+    // 更新会话标识
+    void updateSessionId(Integer userId, String sessionId);
 
     // 密码校验
     Boolean checkPassword(User user, String rawPassword);
