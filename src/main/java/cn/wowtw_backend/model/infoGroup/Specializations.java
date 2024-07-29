@@ -13,4 +13,6 @@ public class Specializations {
     private Integer id;
 
     private String name;
+
+    private String string;
 }

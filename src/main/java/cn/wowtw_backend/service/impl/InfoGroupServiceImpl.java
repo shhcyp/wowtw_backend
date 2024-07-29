@@ -207,15 +207,13 @@ public class InfoGroupServiceImpl implements InfoGroupService {
     }
 
     private List<InfoGroupsDetails> convertSpecializationsDTOs(List<SpecializationsDTO> specializations) {
-        List<InfoGroupsDetails> detailsSpecializationTreesDTOs = new ArrayList<>();
+        List<InfoGroupsDetails> detailsSpecializationsDTOs = new ArrayList<>();
         for (SpecializationsDTO specialization : specializations) {
-            InfoGroupsDetailsSpecializationsDTO detailsSpecializationTreesDTO = new InfoGroupsDetailsSpecializationsDTO();
-            detailsSpecializationTreesDTO.setTalentName(specialization.getSpecialization());
-
-            List<SpecializationTreesDTO> specializationTreesDTOs = specializationsRepository.findSpecializationTreesBySpecializationsId(specialization.getId());
-            detailsSpecializationTreesDTO.setSpecializationTrees(specializationTreesDTOs);
-            detailsSpecializationTreesDTOs.add(detailsSpecializationTreesDTO);
+            InfoGroupsDetailsSpecializationsDTO detailsSpecializationsDTO = new InfoGroupsDetailsSpecializationsDTO();
+            detailsSpecializationsDTO.setTalentName(specialization.getName());
+            detailsSpecializationsDTO.setString(specialization.getString());
+            detailsSpecializationsDTOs.add(detailsSpecializationsDTO);
         }
-        return detailsSpecializationTreesDTOs;
+        return detailsSpecializationsDTOs;
     }
 }

@@ -9,5 +9,5 @@ public class InfoGroupsDetailsSpecializationsDTO implements InfoGroupsDetails {
 
     private String talentName;
 
-    private List<SpecializationTreesDTO> specializationTrees;
+    private String string;
 }

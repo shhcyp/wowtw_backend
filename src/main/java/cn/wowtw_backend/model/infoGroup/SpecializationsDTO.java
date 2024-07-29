@@ -9,5 +9,7 @@ public class SpecializationsDTO {
 
     private Integer id;
 
-    private String specialization;
+    private String name;
+
+    private String string;
 }
