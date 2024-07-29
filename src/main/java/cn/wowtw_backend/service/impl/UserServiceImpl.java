@@ -1,13 +1,14 @@
 package cn.wowtw_backend.service.impl;
 
 import cn.wowtw_backend.mapper.UserMapper;
+import cn.wowtw_backend.repository.*;
 import cn.wowtw_backend.service.UserService;
 import cn.wowtw_backend.utils.CustomWebSocketHandler;
 import cn.wowtw_backend.utils.IdentifierGenerator;
 import cn.wowtw_backend.model.user.User;
-import cn.wowtw_backend.repository.UserRepository;
 import cn.wowtw_backend.utils.JwtUtils;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,19 +21,37 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
 
     private final CustomWebSocketHandler webSocketHandler;
+
+    private final UserRepository userRepository;
+    private final TalentsClothesRepository talentsClothesRepository;
+    private final TalentsLeathersRepository talentsLeathersRepository;
+    private final TalentsMailsRepository talentsMailsRepository;
+    private final TalentsMainHandWeaponsRepository talentsMainHandWeaponsRepository;
+    private final TalentsMiscellaneaRepository talentsMiscellaneaRepository;
+    private final TalentsOffHandWeaponsRepository talentsOffHandWeaponsRepository;
+    private final TalentsPlatesRepository talentsPlatesRepository;
+    private final TalentsTwoHandWeaponsRepository talentsTwoHandWeaponsRepository;
 
     private int currentLength = 4;  // 初始长度为4位
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, UserRepository userRepository, CustomWebSocketHandler webSocketHandler) {
+    public UserServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, UserRepository userRepository, CustomWebSocketHandler webSocketHandler, TalentsClothesRepository talentsClothesRepository, TalentsLeathersRepository talentsLeathersRepository, TalentsMailsRepository talentsMailsRepository, TalentsMainHandWeaponsRepository talentsMainHandWeaponsRepository, TalentsMiscellaneaRepository talentsMiscellaneaRepository, TalentsOffHandWeaponsRepository talentsOffHandWeaponsRepository, TalentsPlatesRepository talentsPlatesRepository, TalentsTwoHandWeaponsRepository talentsTwoHandWeaponsRepository) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.webSocketHandler = webSocketHandler;
+        this.talentsClothesRepository = talentsClothesRepository;
+        this.talentsLeathersRepository = talentsLeathersRepository;
+        this.talentsMailsRepository = talentsMailsRepository;
+        this.talentsMainHandWeaponsRepository = talentsMainHandWeaponsRepository;
+        this.talentsMiscellaneaRepository = talentsMiscellaneaRepository;
+        this.talentsOffHandWeaponsRepository = talentsOffHandWeaponsRepository;
+        this.talentsPlatesRepository = talentsPlatesRepository;
+        this.talentsTwoHandWeaponsRepository = talentsTwoHandWeaponsRepository;
     }
 
     // 查询所有用户信息
@@ -217,5 +236,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkIdentifierExists(String identifier) {
         return userRepository.existsByIdentifier(identifier);
+    }
+
+    @Override
+    public Long getGearCount() {
+        Long clothes = talentsClothesRepository.count();
+        Long leathers = talentsLeathersRepository.count();
+        Long mails = talentsMailsRepository.count();
+        Long mainHandWps = talentsMainHandWeaponsRepository.count();
+        Long miscellanea = talentsMiscellaneaRepository.count();
+        Long offHandWps = talentsOffHandWeaponsRepository.count();
+        Long Plates = talentsPlatesRepository.count();
+        Long twoHandWps = talentsTwoHandWeaponsRepository.count();
+
+        return clothes + leathers + mails + mainHandWps + miscellanea + offHandWps + Plates + twoHandWps;
     }
 }

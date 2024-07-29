@@ -13,6 +13,6 @@ public interface SpecializationsRepository extends JpaRepository<Specializations
     @Query("SELECT new cn.wowtw_backend.model.infoGroup.SpecializationsDTO(t.id, s.name) FROM Specializations s JOIN TalentsSpecializations t ON s.id = t.specializations.id WHERE t.talents.id = :talentId")
     List<SpecializationsDTO> findSpecializationsByTalentId(Integer talentId);
 
-    @Query("SELECT new cn.wowtw_backend.model.infoGroup.SpecializationTreesDTO(s.name, s.image) FROM SpecializationTrees s JOIN TalentsSpecializationsSpecializationTrees t ON s.id = t.talentsSpecializations.id WHERE t.talentsSpecializations.id = :specsId")
+    @Query("SELECT new cn.wowtw_backend.model.infoGroup.SpecializationTreesDTO(s.name, s.image) FROM SpecializationTrees s JOIN TalentsSpecializationsSpecializationTrees t ON s.id = t.specializationTrees.id WHERE t.talentsSpecializations.id = :specsId")
     List<SpecializationTreesDTO> findSpecializationTreesBySpecializationsId(Integer specsId);
 }

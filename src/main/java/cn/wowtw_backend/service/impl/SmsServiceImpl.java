@@ -54,8 +54,8 @@ public class SmsServiceImpl {
 
             SendSmsRequest sendSmsRequest = new SendSmsRequest()
                     .setPhoneNumbers(phoneNumber)
-                    .setSignName("魔兽世界时光漫游")
-                    .setTemplateCode("SMS_468355711")
+                    .setSignName("时光漫游")
+                    .setTemplateCode("SMS_470615097")
                     .setTemplateParam("{\"code\":\"" + code + "\"}");
 
             smsClient.sendSmsWithOptions(sendSmsRequest, new RuntimeOptions());

@@ -45,7 +45,7 @@ public class AlipayServiceImpl implements AlipayService {
         String outTradeNo = OrderUtil.generateOrderNo();
         String phoneNumber = preCreateRequest.getPhoneNumber();
         String inviteIdentifier = preCreateRequest.getInviteIdentifier();
-        String totalAmount = inviteIdentifier == null || inviteIdentifier.isEmpty() ? "420.00" : "336.00";
+        String totalAmount = inviteIdentifier == null || inviteIdentifier.isEmpty() ? "0.02" : "0.01";
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
 

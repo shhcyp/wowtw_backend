@@ -2,15 +2,12 @@ package cn.wowtw_backend.controller;
 
 import cn.wowtw_backend.utils.Result;
 import cn.wowtw_backend.service.UserService;
-import cn.wowtw_backend.utils.JwtUtils;
 import cn.wowtw_backend.model.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -75,7 +72,7 @@ public class UserController {
     // 用户登录
     @PostMapping("/user/login")
     public Result login(@RequestBody User user) {
-        log.info("用户登录: {}", user);
+        log.info("用户登录: {}", user.getUsername());
         User userInDB = userService.login(user.getUsername());
         log.info("登录第一步先查询数据库中用户信息 {}", userInDB);
         if (userInDB == null) {
@@ -153,5 +150,12 @@ public class UserController {
         log.info("查询{}是否存在", identifier);
         boolean result = userService.checkIdentifierExists(identifier);
         return result ? Result.success("邀请码可用") : Result.fail("无效邀请码");
+    }
+
+    // 装备数量统计
+    @GetMapping("/user/gearCount")
+    public Result gearCount() {
+        Long gearCount = userService.getGearCount();
+        return Result.success(gearCount);
     }
 }

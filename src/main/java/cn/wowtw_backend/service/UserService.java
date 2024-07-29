@@ -53,4 +53,7 @@ public interface UserService {
 
     // 邀请码校验
     boolean checkIdentifierExists(String identifier);
+
+    // 装备数量统计
+    Long getGearCount();
 }
