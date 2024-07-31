@@ -24,8 +24,8 @@ public class UserController {
 
     // Hello
     @GetMapping("/hello")
-    public String hello() {
-        return "Hello! I'm here!";
+    public Result hello() {
+        return Result.success("Hello! I'm here!");
     }
 
     // 用户名占用验证
