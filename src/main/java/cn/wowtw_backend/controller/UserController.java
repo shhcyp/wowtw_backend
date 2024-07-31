@@ -7,7 +7,6 @@ import cn.wowtw_backend.model.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -25,6 +24,7 @@ public class UserController {
     // Hello
     @GetMapping("/hello")
     public Result hello() {
+        log.info("===有访客===");
         return Result.success("Hello! I'm here!");
     }
 
@@ -85,7 +85,7 @@ public class UserController {
     // 找回密码用户名、手机号验证
     @PostMapping("/user/resetpassword/verify")
     public Result usernamePhoneNumberVerify(@RequestBody User user) {
-        log.info("===找回密码第一步验证{}===", user.getUsername());
+        // log.info("===找回密码第一步验证{}===", user.getUsername());
         User u = userService.usernamePhoneNumberVerify(user);
         if (u != null) {
             return new Result(1, "验证通过，请回答密保问题", u.getQuestion());
@@ -97,7 +97,7 @@ public class UserController {
     // 找回密码问题答案验证
     @PostMapping("/user/resetpassword/match")
     public Result answerMatchVerify(@RequestBody User user) {
-        log.info("===密保问题验证{}===", user.getUsername());
+        // log.info("===密保问题验证{}===", user.getUsername());
         Boolean isMatch = userService.answerMatchVerify(user);
         if (isMatch) {
             return Result.success("验证通过，请输入新密码");
@@ -109,7 +109,7 @@ public class UserController {
     // 重置密码
     @PostMapping("/user/resetpassword/submit")
     public Result resetPassword(@RequestBody User user) {
-        log.info("==={}用户重置密码===", user.getUsername());
+        // log.info("==={}用户重置密码===", user.getUsername());
         Boolean result = userService.resetPassword(user);
         if (result) {
             return Result.success("重置成功，跳转中");
@@ -121,7 +121,7 @@ public class UserController {
     // 修改头像
     @PostMapping("/user/avatar")
     public Result updateAvatarFree(@RequestBody User user) {
-        log.info("===用户{}修改头像{}===", user.getId(), user.getAvatar());
+        // log.info("===用户{}修改头像{}===", user.getId(), user.getAvatar());
         int result = userService.updateAvatarFree(user);
         if (result == 1) {
             return Result.success("修改成功");
@@ -133,7 +133,7 @@ public class UserController {
     // 修改昵称
     @PostMapping("/user/nickname")
     public Result updateNickname(@RequestBody User renickname) {
-        log.info("===用户{}修改昵称{}===", renickname.getId(), renickname.getNickname());
+        // log.info("===用户{}修改昵称{}===", renickname.getId(), renickname.getNickname());
         Boolean result = userService.updateNickname(renickname);
         return result ? Result.success(renickname.getNickname()) : Result.fail();
     }
@@ -141,7 +141,7 @@ public class UserController {
     // 邀请码验证
     @GetMapping("/identifiers/exists")
     public Result inviteIDExists(String identifier) {
-        log.info("===查询{}是否存在===", identifier);
+        // log.info("===查询{}是否存在===", identifier);
         boolean result = userService.checkIdentifierExists(identifier);
         return result ? Result.success("邀请码可用") : Result.fail("无效邀请码");
     }

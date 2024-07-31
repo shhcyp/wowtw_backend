@@ -80,7 +80,7 @@ public class InfoGroupServiceImpl implements InfoGroupService {
                         case PLATE:
                             // 查询对应板甲
                             List<GearBaseDTO> gearPlates = platesRepository.findPlatesByTalentId(talentId);
-                            log.info("{}", gearPlates.size());
+                            // log.info("{}", gearPlates.size());
                             // GearBaseDTO类型转换为InfoGroupsDetailsGearDTO类型，写入InfoGroupsResponseDTO的List<InfoGroupsDetails> details
                             infoGroupsResponseDTO.setDetails(convertGearsToGearDTOs(
                                     gearPlates,

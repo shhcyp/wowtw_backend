@@ -112,7 +112,7 @@ public class AlipayServiceImpl implements AlipayService {
         request.setBizModel(model);
 
         AlipayTradeQueryResponse response = alipayClient.execute(request);
-        System.out.println(response.getBody());
+        // System.out.println(response.getBody());
 
         if (response.isSuccess()) {
             System.out.println("查询成功，订单状态为:" + response.getTradeStatus());

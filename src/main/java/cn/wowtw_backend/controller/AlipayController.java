@@ -18,7 +18,7 @@ public class AlipayController {
     // 预创订单
     @PostMapping("/preCreate")
     public Result preCreateOrder(@RequestBody AlipayOrder preCreateRequest) throws AlipayApiException {
-        log.info("==={}请求生成订单，携带【{}】邀请码===", preCreateRequest.getPhoneNumber(), preCreateRequest.getInviteIdentifier());
+        // log.info("==={}请求生成订单，携带【{}】邀请码===", preCreateRequest.getPhoneNumber(), preCreateRequest.getInviteIdentifier());
         AlipayOrder preCreateResponse = alipayService.preCreateOrder(preCreateRequest);
         return new Result(1, "success create order" , preCreateResponse);
     }
@@ -29,13 +29,6 @@ public class AlipayController {
         String outTradeNo = alipayOrder.getOutTradeNo();
         String tradeStatus = alipayService.queryAlipayResult(outTradeNo);
         return new Result(1, "success query trade status", tradeStatus);
-//        if ("TRADE_SUCCESS".equals(tradeStatus)) {
-//            return Result.success(tradeStatus);
-//        } else {
-//            alipayService.pollPayment(outTradeNo);
-//            String pollResult = alipayService.getPollResult(outTradeNo);
-//            return Result.success(pollResult);
-//        }
     }
 
     // 取消交易

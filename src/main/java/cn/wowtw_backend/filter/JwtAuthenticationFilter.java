@@ -37,28 +37,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        log.info("authorizationHeader: {}", authorizationHeader);
+        // log.info("authorizationHeader: {}", authorizationHeader);
         String sessionIdHeader = request.getHeader("X-Session-Id");
-        log.info("sessionIdHeader:{}", sessionIdHeader);
+        // log.info("sessionIdHeader:{}", sessionIdHeader);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwt = authorizationHeader.substring(7);
-            log.info("JWT Token: {}", jwt);
+            // log.info("JWT Token: {}", jwt);
             Claims claims = JwtUtils.parseJwt(jwt);
 
             if (claims != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                log.info("Claims: {}", claims);
+                // log.info("Claims: {}", claims);
 
                 String username = claims.getSubject();
                 String sessionId = claims.get("sessionId", String.class);
 
                 if (username != null && sessionId != null) {
                     User user = userService.getByUsername(username);
-                    log.info("user: {}", user);
+                    // log.info("user: {}", user.getUsername());
 
                     if (user != null && sessionId.equals(user.getSessionId()) && user.getSessionActive()) {
-                        log.info("(user.getSessionId() {}", user.getSessionId());
-                        log.info("user.getSessionActive() {}", user.getSessionActive());
+                        // log.info("(user.getSessionId() {}", user.getSessionId());
+                        // log.info("user.getSessionActive() {}", user.getSessionActive());
                         // 验证 X-Session-Id 头
                         if (sessionIdHeader != null && sessionIdHeader.equals(sessionId)) {
                             // 会话有效
@@ -69,14 +69,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             log.debug("Authentication successful for user: {}", username);
                         } else {
                             // sessionId 不匹配或无效
-                            log.warn("Session ID does not match or session is inactive for user: {}", username);
+                            // log.warn("Session ID does not match or session is inactive for user: {}", username);
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.getWriter().write("{\"code\": 401, \"message\": \"Session invalid\"}");
+
                             return;
                         }
                     } else {
                         // 会话无效
-                        log.warn("Session ID does not match or session is inactive for user: {}", username);
+                        // log.warn("Session ID does not match or session is inactive for user: {}", username);
                         response.getWriter().write("{\"code\": 401, \"message\": \"Session invalid\"}");
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
