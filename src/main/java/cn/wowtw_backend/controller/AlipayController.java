@@ -18,7 +18,7 @@ public class AlipayController {
     // 预创订单
     @PostMapping("/preCreate")
     public Result preCreateOrder(@RequestBody AlipayOrder preCreateRequest) throws AlipayApiException {
-        log.info("{}请求生成订单，携带{}邀请码", preCreateRequest.getPhoneNumber(), preCreateRequest.getInviteIdentifier());
+        log.info("==={}请求生成订单，携带【{}】邀请码===", preCreateRequest.getPhoneNumber(), preCreateRequest.getInviteIdentifier());
         AlipayOrder preCreateResponse = alipayService.preCreateOrder(preCreateRequest);
         return new Result(1, "success create order" , preCreateResponse);
     }

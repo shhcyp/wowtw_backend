@@ -4,7 +4,6 @@ import cn.wowtw_backend.model.user.User;
 import cn.wowtw_backend.service.UserService;
 import cn.wowtw_backend.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

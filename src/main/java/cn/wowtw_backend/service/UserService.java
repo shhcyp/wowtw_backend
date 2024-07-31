@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    // 查询所有用户
-    List<User> list();
 
     // 注册
     Boolean register(User user);

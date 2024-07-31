@@ -24,7 +24,7 @@ public class InfoGroupController {
     // 根据天赋id查询信息组
     @GetMapping("/{talentId}")
     public Result getInfoGroup(@PathVariable Integer talentId) {
-        log.info("talentId: {}", talentId);
+        log.info("===根据talentId: {}查询信息组===", talentId);
         List<InfoGroupsResponseDTO> infoGroupResponse = infoGroupService.getInfoGroupByTalentId(talentId);
         return Result.success(infoGroupResponse);
     }

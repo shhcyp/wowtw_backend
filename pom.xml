@@ -10,7 +10,7 @@
     </parent>
     <groupId>cn.wowtw</groupId>
     <artifactId>wowtw_backend</artifactId>
-    <version>BETA</version>
+    <version>1.0.0</version>
     <name>wowtw_backend</name>
     <description>wowtw_backend</description>
     <url/>

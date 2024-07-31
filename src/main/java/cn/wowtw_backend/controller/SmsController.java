@@ -22,7 +22,7 @@ public class SmsController {
     @PostMapping("/sms/send")
     public Result sendCode(@RequestBody Map<String, String> payload) {
         String phoneNumber = payload.get("phoneNumber");
-        log.info("=={}==请求注册码", phoneNumber);
+        log.info("==={}请求注册码===", phoneNumber);
         boolean success = smsService.sendVerificationCode(phoneNumber);
         return success ? Result.success("验证码发送成功") : Result.fail("发送验证码失败");
     }

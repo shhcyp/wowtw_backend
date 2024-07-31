@@ -8,7 +8,6 @@ import cn.wowtw_backend.utils.IdentifierGenerator;
 import cn.wowtw_backend.model.user.User;
 import cn.wowtw_backend.utils.JwtUtils;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,11 +53,6 @@ public class UserServiceImpl implements UserService {
         this.talentsTwoHandWeaponsRepository = talentsTwoHandWeaponsRepository;
     }
 
-    // 查询所有用户信息
-    @Override
-    public List<User> list() {
-        return userMapper.list();
-    }
 
     // 用户名占用验证
     @Override
