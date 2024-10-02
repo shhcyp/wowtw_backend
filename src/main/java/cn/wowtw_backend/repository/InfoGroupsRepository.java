@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface InfoGroupsRepository extends JpaRepository<InfoGroups, Integer> {
 
-    @Query("SELECT new cn.wowtw_backend.model.infoGroup.InfoGroupsDTO(i.id, i.name) FROM InfoGroups i JOIN TalentsInfoGroups t ON i.id = t.infoGroups.id WHERE t.talents.id = :talentId")
+    @Query("SELECT new cn.wowtw_backend.model.infoGroup.InfoGroupsDTO(i.id, i.name) FROM InfoGroups i JOIN TalentsInfoGroups t ON i.id = t.infoGroups.id WHERE t.talents.id = :talentId  ORDER BY t.sort")
     List<InfoGroupsDTO> findInfoGroupsByTalentId(Integer talentId);
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface PlatesRepository extends JpaRepository<Plates, Integer> {
 
-    @Query("SELECT new cn.wowtw_backend.model.infoGroup.GearBaseDTO(t.id, p.icon, p.part, p.name, p.quality, t.isMark, p.drop, t.isExtra) FROM Plates p JOIN TalentsPlates t ON p.id = t.plates.id WHERE t.talents.id = :talentId")
+    @Query("SELECT new cn.wowtw_backend.model.infoGroup.GearBaseDTO(t.id, p.icon, p.part, p.name, p.quality, t.isMark, p.drop, t.isExtra) FROM Plates p JOIN TalentsPlates t ON p.id = t.plates.id WHERE t.talents.id = :talentId ORDER BY t.sort")
     List<GearBaseDTO> findPlatesByTalentId(Integer talentId);
 }
