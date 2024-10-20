@@ -45,15 +45,17 @@ public class AlipayServiceImpl implements AlipayService {
         String outTradeNo = OrderUtil.generateOrderNo();
         String phoneNumber = preCreateRequest.getPhoneNumber();
         String inviteIdentifier = preCreateRequest.getInviteIdentifier();
-        String totalAmount;
+        String totalAmount = "198.00";
 
-        if (inviteIdentifier == null || inviteIdentifier.isEmpty()) {
-            totalAmount = "420.00";
+
+        //弃用激活码策略
+        /*if (inviteIdentifier == null || inviteIdentifier.isEmpty()) {
+            totalAmount = "198.00";
         } else if (inviteIdentifier.equals("A7F3-K65V-K5YF-R4DZ-O76E-T99H-O95E")) {
             totalAmount = "0.01";
         } else {
             totalAmount = "390.00";
-        }
+        }*/
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
 
