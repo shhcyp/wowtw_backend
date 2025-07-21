@@ -21,12 +21,22 @@ public class MyAlipayConfig {
     public AlipayConfig initAlipayConfig() {
         alipayConfig.setServerUrl(alipayProperties.getServerUrl());
         alipayConfig.setAppId(alipayProperties.getAppId());
-        // alipayConfig.setPrivateKey(alipayProperties.getPrivateKey());
-        try {
+        //  alipayConfig.setPrivateKey(alipayProperties.getPrivateKey());
+
+       try {
+            // String alipayPrivateKey = System.getenv("ALIPAY_PRIVATE_KEY");
             alipayConfig.setPrivateKey(new String(Files.readAllBytes(Paths.get("/etc/AlipayPrivateKey/alipay_private_key.txt"))));
-        } catch (IOException e) {
+            /*
+            if (alipayPrivateKey != null) {
+                alipayConfig.setPrivateKey(alipayPrivateKey);
+            } else {
+                System.err.println("alipayPrivateKey not set");
+            }
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         alipayConfig.setFormat(alipayProperties.getFormat());
         alipayConfig.setAlipayPublicKey(alipayProperties.getAlipayPublicKey());
         alipayConfig.setCharset(alipayProperties.getCharset());

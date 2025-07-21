@@ -41,7 +41,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String sessionIdHeader = request.getHeader("X-Session-Id");
         // log.info("sessionIdHeader:{}", sessionIdHeader);
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        // 不需要验证 Authorization 的路径
+        String requestURI = request.getRequestURI();
+        if (authorizationHeader == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (authorizationHeader.startsWith("Bearer ")) {
             String jwt = authorizationHeader.substring(7);
             // log.info("JWT Token: {}", jwt);
             Claims claims = JwtUtils.parseJwt(jwt);

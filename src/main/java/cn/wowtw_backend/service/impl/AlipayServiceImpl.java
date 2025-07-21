@@ -45,17 +45,17 @@ public class AlipayServiceImpl implements AlipayService {
         String outTradeNo = OrderUtil.generateOrderNo();
         String phoneNumber = preCreateRequest.getPhoneNumber();
         String inviteIdentifier = preCreateRequest.getInviteIdentifier();
-        String totalAmount = "198.00";
+        String totalAmount = "6.66";
 
 
         //弃用激活码策略
-        /*if (inviteIdentifier == null || inviteIdentifier.isEmpty()) {
-            totalAmount = "198.00";
+        if (inviteIdentifier == null || inviteIdentifier.isEmpty()) {
+            totalAmount = "6.66";
         } else if (inviteIdentifier.equals("A7F3-K65V-K5YF-R4DZ-O76E-T99H-O95E")) {
-            totalAmount = "0.01";
+            totalAmount = "6.66";
         } else {
-            totalAmount = "390.00";
-        }*/
+            totalAmount = "6.66";
+        }
 
         AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig);
 
@@ -88,6 +88,7 @@ public class AlipayServiceImpl implements AlipayService {
 
         if (response.isSuccess()) {
             System.out.println("调用预创订单接口成功");
+            //  System.out.println(alipayConfig.getPrivateKey());
             return preCreateOrder;
         } else {
             System.out.println("调用预创订单接口失败");

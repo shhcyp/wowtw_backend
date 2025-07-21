@@ -22,5 +22,5 @@ public class TalentsGearBase {
 
     private Boolean isExtra;
 
-    private Integer sort;
+    private Double sort;
 }
